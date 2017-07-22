@@ -33,6 +33,23 @@ def load_content(page_file):
     return f_rd(page_file).read()
 
 
+def load_city_data(locs_file):
+    """Load city codes, abbreviations, and names from file.
+    """
+    # City abbreviation to city code.
+    abbrv_to_code = {}
+    # City name to city code.
+    cname_to_code = {}
+    for line in f_rd(locs_file):
+        code, abbrv, cname = [v.upper() for v in
+                              line.strip().split(const.COMMA)]
+        if abbrv:
+            abbrv_to_code[abbrv] = code
+        if cname:
+            cname_to_code[cname] = code
+    return abbrv_to_code, cname_to_code
+
+
 def load_locs(locs_file):
     """Load city-code to latitude-longitude coordinates from file.
     """
