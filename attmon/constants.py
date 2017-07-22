@@ -38,6 +38,7 @@ ROW_END_PAT = re.compile(r'.*?</TR>.*?')
 
 NO_VAL = u'&nbsp;'
 NO_RTT = u'0'
+NO_LOSS = u'-1'
 # Regular expressions to parse the table data.
 TD_VAL_PAT = re.compile(r'<TD .*?>' +
                         r'(?:<FONT.*?>(.*?)</FONT>|'

@@ -17,6 +17,7 @@ __license__ = 'MIT'
 
 
 import argparse
+import attmon.lossmon as lossmon
 import attmon.rttmon as rttmon
 import attmon.utils as utils
 
@@ -40,6 +41,17 @@ def parse_delay(args, city_data):
     return fm
 
 
+def parse_loss(args, city_data):
+    """Parse network loss matrix from the HTML file.
+    """
+    m = lossmon.parse(utils.load_content(args.html_file), city_data)
+
+    # Complete matrix.
+    fm = lossmon.complete_matrix(m)
+
+    return fm
+
+
 def main(args):
     if args.metric not in METRICS:
         raise ValueError("Unsupported Metric: %s" % (args.metric))
@@ -48,6 +60,8 @@ def main(args):
 
     if args.metric == DELAY:
         fm = parse_delay(args, city_data)
+    else:
+        fm = parse_loss(args, city_data)
 
     out = args.out_file
     if not args.out_file:
