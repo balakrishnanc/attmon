@@ -17,7 +17,7 @@ __license__ = 'MIT'
 
 
 from . import constants as const
-from collections import defaultdict
+from . import utils
 import io
 import math
 
@@ -134,25 +134,8 @@ def compute_inf(m, locs):
     return m
 
 
-def complete_matrix(m):
-    """Complete the symmetric matrix given the lower-left triangle.
-    """
-    # Function to build a new row of values.
-    def_row = lambda: defaultdict(lambda: const.NO_RTT)
-
-    # Full matrix.
-    full_m = defaultdict(def_row)
-
-    for r in m.keys():
-        for c in m[r].keys():
-            full_m[r][c] = m[r][c]
-
-            if c not in full_m:
-                for c in m[r]:
-                    full_m[c][r] = m[r][c]
-            elif r not in full_m[c]:
-                full_m[c][r] = m[r][c]
-    return full_m
+# Complete the symmetric matrix given the lower-left triangle.
+complete_matrix = lambda m: utils.complete_matrix(m, const.NO_RTT)
 
 
 def show_matrix(m):

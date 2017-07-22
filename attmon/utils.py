@@ -17,6 +17,7 @@ __license__ = 'MIT'
 
 
 from . import constants as const
+from collections import defaultdict
 import io
 
 
@@ -61,3 +62,24 @@ def gen_gp_data(fm, out, sep=const.COMMA):
                                            [str(fm[r][c]) for c in cols])
                                   for r in rows]))
     out.write(const.NEWLINE)
+
+
+def complete_matrix(matrix, def_val):
+    """Complete the symmetric matrix given the lower-left triangle.
+    """
+    # Function to build a new row of values.
+    def_row = lambda: defaultdict(lambda: def_val)
+
+    # Full matrix.
+    full_m = defaultdict(def_row)
+
+    for r in matrix.keys():
+        for c in matrix[r].keys():
+            full_m[r][c] = matrix[r][c]
+
+            if c not in full_m:
+                for c in matrix[r]:
+                    full_m[c][r] = matrix[r][c]
+            elif r not in full_m[c]:
+                full_m[c][r] = matrix[r][c]
+    return full_m
