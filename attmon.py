@@ -16,22 +16,43 @@ __version__ = '1.0'
 __license__ = 'MIT'
 
 
+import argparse
 import attmon.rttmon as rttmon
-import io
+import attmon.utils as utils
 
 
-# Utility `file open` calls.
-__open = lambda m: lambda f: io.open(f, m, encoding='utf-8')
-__rd = __open('r')
-__wr = __open('w')
+def main(args):
+    m = rttmon.parse(utils.load_content(args.html_file))
+    if args.locs_file:
+        m = rttmon.compute_inf(m, utils.load_locs(args.locs_file))
 
+    # Complete matrix.
+    fm = rttmon.complete_matrix(m)
 
-def load_content(page_file):
-    """Slurp content from the file.
-    """
-    return __rd(page_file).read()
+    out = args.out_file
+    if not args.out_file:
+        out = sys.stdout
+    else:
+        out = utils.f_wr(args.out_file)
+
+    with out:
+        utils.gen_gp_data(fm, out)
 
 
 if __name__ == '__main__':
-    m = rttmon.parse_page(load_content('test/att-network-delay--0217-06232017.html'))
-    rttmon.show_matrix(m)
+    parser = argparse.ArgumentParser(
+        description='Retrieve network delay matrix from HTML file')
+    parser.add_argument('html_file', metavar='input',
+                        type=str,
+                        help=('HTML file containing ' +
+                              'the network delay measurements'))
+    parser.add_argument('--locs', dest='locs_file', metavar='city-locations',
+                        type=str,
+                        help=('File containing ' +
+                              'latitude-longitude coordinates for cities'))
+    parser.add_argument('--out', dest='out_file', metavar='output',
+                        type=str,
+                        help=('File where ' +
+                              'the network delay matrix should be written to'))
+    args = parser.parse_args()
+    main(args)

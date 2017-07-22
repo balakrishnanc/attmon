@@ -19,7 +19,14 @@ __license__ = 'MIT'
 import re
 
 
+COLON = u':'
+COMMA = u','
 NEWLINE = u'\n'
+TAB = u'\t'
+
+# Precision (in terms of number of decimal places)
+#  for RTT inflation computations.
+PREC = 4
 
 # Regular expressions to detect the beginning and ending of a table.
 TAB_BEG_PAT = re.compile(r'<\s*table.*?>', re.IGNORECASE)
@@ -30,7 +37,7 @@ ROW_BEG_PAT = re.compile(r'<TR>')
 ROW_END_PAT = re.compile(r'.*?</TR>.*?')
 
 NO_VAL = u'&nbsp;'
-NO_RTT = u'-1'
+NO_RTT = u'0'
 # Regular expressions to parse the table data.
 TD_VAL_PAT = re.compile(r'<TD .*?>' +
                         r'(?:<FONT.*?>(.*?)</FONT>|'
@@ -38,7 +45,6 @@ TD_VAL_PAT = re.compile(r'<TD .*?>' +
 
 # String used to identify the start of the table of values.
 DATA_BEG_PAT = re.compile(r'<TD.*?>.*?CITY\s+PAIRS.*?</TD>')
-
 
 # City abbreviations to city codes.
 CTABBRV_CTCODE = {
@@ -52,7 +58,7 @@ CTABBRV_CTCODE = {
     u'DET' : u'US-MI-DETROIT',
     u'HOU' : u'US-TX-HOUSTON',
     u'IND' : u'US-IN-INDIANAPOLIS',
-    u'KAN' : u'US-KA-KANSASCITY',
+    u'KAN' : u'US-KS-KANSASCITY',
     u'LA'  : u'US-CA-LOSANGELES',
     u'MAD' : u'US-WI-MADISON',
     u'NAS' : u'US-TN-NASHVILLE',
@@ -80,7 +86,7 @@ CTNAME_CTCODE = {
     u'DETROIT'       : u'US-MI-DETROIT',
     u'HOUSTON'       : u'US-TX-HOUSTON',
     u'INDIANAPOLIS'  : u'US-IN-INDIANAPOLIS',
-    u'KANSAS CITY'   : u'US-KA-KANSASCITY',
+    u'KANSAS CITY'   : u'US-KS-KANSASCITY',
     u'LOS ANGELES'   : u'US-CA-LOSANGELES',
     u'MADISON'       : u'US-WI-MADISON',
     u'NASHVILLE'     : u'US-TN-NASHVILLE',
