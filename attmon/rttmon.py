@@ -30,9 +30,11 @@ def proc_row(row):
     return (row[0], row[1:-1], row[-1])
 
 
-def parse(page):
+def parse(page, city_data):
     """Parse Web page and report the latency matrix on the page.
     """
+    # Mapping from abbreviations and city names to city codes.
+    abbrvs, cnames = city_data
     # Flag indicating when to begin scanning.
     scan = False
     # Flag indicating when to begin processing table data.
@@ -78,14 +80,14 @@ def parse(page):
             src, rtts, hdr = proc_row(curr_row)
 
             if not src and not rtts:
-                col_hdrs.append(const.CTABBRV_CTCODE[hdr.upper()])
+                col_hdrs.append(abbrvs[hdr.upper()])
             elif len(rtts) != len(col_hdrs):
                 raise ValueError('Unknown data format!')
             else:
-                cc = const.CTNAME_CTCODE[src.upper()]
+                cc = cnames[src.upper()]
                 rtt_matrix[cc] = {dst:int(rtt)
                                   for dst,rtt in zip(col_hdrs, rtts)}
-                col_hdrs.append(const.CTABBRV_CTCODE[hdr.upper()])
+                col_hdrs.append(abbrvs[hdr.upper()])
 
             curr_row = []
 
