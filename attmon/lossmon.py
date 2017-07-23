@@ -17,6 +17,7 @@ __license__ = 'MIT'
 
 
 from . import constants as const
+from . import stats
 from . import utils
 import io
 import math
@@ -95,7 +96,7 @@ def parse(page, city_data):
         if proc and const.TAB_END_PAT.match(line):
             break
 
-    return loss_matrix, utils.compute_avg(loss_matrix, float(const.NO_LOSS))
+    return loss_matrix, stats.compute(loss_matrix, float(const.NO_LOSS))
 
 
 # Complete the symmetric matrix given the lower-left triangle.

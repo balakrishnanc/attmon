@@ -17,6 +17,7 @@ __license__ = 'MIT'
 
 
 from . import constants as const
+from . import stats
 from . import utils
 import io
 import math
@@ -95,7 +96,7 @@ def parse(page, city_data):
         if proc and const.TAB_END_PAT.match(line):
             break
 
-    return rtt_matrix, utils.compute_avg(rtt_matrix, float(const.NO_RTT))
+    return rtt_matrix, stats.compute(rtt_matrix, float(const.NO_RTT))
 
 
 def calc_dist(x, y):
