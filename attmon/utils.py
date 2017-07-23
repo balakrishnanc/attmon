@@ -63,12 +63,13 @@ def load_locs(locs_file):
     return city_locs
 
 
-def gen_gp_data(fm, out, sep=const.COMMA):
+def gen_gp_data(fm, avg, out, sep=const.COMMA):
     """Using a full matrix of values, generates data in a gnuplot-friendly
     format.
     """
     # Column names.
     cols = sorted(fm[list(fm.keys())[0]].keys())
+
     # Row names.
     rows = sorted(fm.keys())
 
@@ -79,6 +80,17 @@ def gen_gp_data(fm, out, sep=const.COMMA):
                                            [str(fm[r][c]) for c in cols])
                                   for r in rows]))
     out.write(const.NEWLINE)
+    out.write("#> average: %s\n" % (str(avg)))
+
+
+def compute_avg(matrix, missing_val):
+    """Compute average delay or loss.
+    """
+    vals = [matrix[r][c]
+            for r in matrix.keys()
+            for c in matrix[r]
+            if matrix[r][c] != missing_val]
+    return sum(vals)/len(vals)
 
 
 def complete_matrix(matrix, def_val):

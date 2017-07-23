@@ -32,25 +32,25 @@ METRICS = (DELAY, LOSS)
 def parse_delay(args, city_data):
     """Parse network delay matrix from the HTML file.
     """
-    m = rttmon.parse(utils.load_content(args.html_file), city_data)
+    m, avg = rttmon.parse(utils.load_content(args.html_file), city_data)
     if args.locs_file:
         m = rttmon.compute_inf(m, utils.load_locs(args.locs_file))
 
     # Complete matrix.
     fm = rttmon.complete_matrix(m)
 
-    return fm
+    return fm, avg
 
 
 def parse_loss(args, city_data):
     """Parse network loss matrix from the HTML file.
     """
-    m = lossmon.parse(utils.load_content(args.html_file), city_data)
+    m, avg = lossmon.parse(utils.load_content(args.html_file), city_data)
 
     # Complete matrix.
     fm = lossmon.complete_matrix(m)
 
-    return fm
+    return fm, avg
 
 
 def main(args):
@@ -60,9 +60,9 @@ def main(args):
     city_data = utils.load_city_data(args.city_file)
 
     if args.metric == DELAY:
-        fm = parse_delay(args, city_data)
+        fm, avg = parse_delay(args, city_data)
     else:
-        fm = parse_loss(args, city_data)
+        fm, avg = parse_loss(args, city_data)
 
     out = args.out_file
     if not args.out_file:
@@ -71,7 +71,7 @@ def main(args):
         out = utils.f_wr(args.out_file)
 
     with out:
-        utils.gen_gp_data(fm, out)
+        utils.gen_gp_data(fm, avg, out)
 
 
 if __name__ == '__main__':

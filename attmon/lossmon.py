@@ -95,7 +95,7 @@ def parse(page, city_data):
         if proc and const.TAB_END_PAT.match(line):
             break
 
-    return loss_matrix
+    return loss_matrix, utils.compute_avg(loss_matrix, float(const.NO_LOSS))
 
 
 # Complete the symmetric matrix given the lower-left triangle.

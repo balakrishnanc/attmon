@@ -95,7 +95,7 @@ def parse(page, city_data):
         if proc and const.TAB_END_PAT.match(line):
             break
 
-    return rtt_matrix
+    return rtt_matrix, utils.compute_avg(rtt_matrix, float(const.NO_RTT))
 
 
 def calc_dist(x, y):
