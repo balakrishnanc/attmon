@@ -71,17 +71,17 @@ def summarize(links, out, thresh=0.0):
     # Average latency of links.
     rtt_avg = []
 
-    # Maximum rtt observed on links.
+    # Maximum latency observed on links.
     rtt_max = [] 
 
     for src_dst in links:
         data_lst = [v[1] for v in links[src_dst]]
 
-        # Average rtt.
+        # Average latency.
         avg = sum(data_lst)/len(data_lst)
         rtt_avg.append((avg, src_dst))
 
-        # Maximum rtt.
+        # Maximum latency.
         rtt_max.append((max(data_lst), src_dst))
 
     # Sort the data on links in reverse order.
@@ -96,7 +96,7 @@ def summarize(links, out, thresh=0.0):
     for v, k in rtt_max[:5]:
         out.write(u"    %4.2f %20s => %s\n" % (v, k[0], k[1]))
 
-        
+
 def main(args):
     """Merge rtt data.
     """
