@@ -32,7 +32,7 @@ readonly OUT_FILE="$2"
 # Delete output file if it already exists.
 [ -e $OUT_FILE ] && [ -f $OUT_FILE ] && rm -f $OUT_FILE
 
-for data_file in $(ls $IN_PATH/*.html); do
+for data_file in $(ls $IN_PATH/att-network-delay*.html); do
     ts_dt=$(basename $data_file | sed -E 's/^att-network-delay--(.*).html$/\1/')
 
     dt=$(echo $ts_dt | cut -d'-' -f2)
@@ -44,7 +44,7 @@ for data_file in $(ls $IN_PATH/*.html); do
     hr=$(echo $ts | cut -c1-2)
     min=$(echo $ts | cut -c3-4)
 
-    echo -n "$hr $min $mon $day $yr " >> $OUT_FILE
+    echo -n "$mon $day $yr $hr $min" >> $OUT_FILE
     # echo $hr $min $mon $day $yr
     $ATTMON_BIN delay --city-data $CITY_DATA $data_file | \
         grep '^#>'                                      | \
