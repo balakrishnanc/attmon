@@ -29,7 +29,7 @@ LOSS  = 'loss'
 METRICS = (DELAY, LOSS)
 
 
-def parse_delay(args, city_data):
+def parse_delay(args, city_data, complete=False):
     """Parse network delay matrix from the HTML file.
     """
     m, stats = rttmon.parse(utils.load_content(args.html_file), city_data)
@@ -37,18 +37,18 @@ def parse_delay(args, city_data):
         m = rttmon.compute_inf(m, utils.load_locs(args.locs_file))
 
     # Complete matrix.
-    fm = rttmon.complete_matrix(m)
+    fm = rttmon.complete_matrix(m) if complete else m
 
     return fm, stats
 
 
-def parse_loss(args, city_data):
+def parse_loss(args, city_data, complete=False):
     """Parse network loss matrix from the HTML file.
     """
     m, stats = lossmon.parse(utils.load_content(args.html_file), city_data)
 
     # Complete matrix.
-    fm = lossmon.complete_matrix(m)
+    fm = lossmon.complete_matrix(m) if complete else m
 
     return fm, stats
 
@@ -59,10 +59,11 @@ def main(args):
 
     city_data = utils.load_city_data(args.city_file)
 
+    complete = not args.as_adj_list
     if args.metric == DELAY:
-        fm, stats = parse_delay(args, city_data)
+        fm, stats = parse_delay(args, city_data, complete)
     else:
-        fm, stats = parse_loss(args, city_data)
+        fm, stats = parse_loss(args, city_data, complete)
 
     out = args.out_file
     if not args.out_file:
@@ -71,7 +72,13 @@ def main(args):
         out = utils.f_wr(args.out_file)
 
     with out:
-        utils.gen_gp_data(fm, stats, out)
+        if args.as_adj_list:
+            alist = utils.adj_list(fm, (lossmon.NO_LOSS_VAL
+                                        if args.metric == LOSS
+                                        else rttmon.NO_RTT_VAL))
+            utils.write_adj_list(alist, stats, out)
+        else:
+            utils.gen_gp_data(fm, stats, out)
 
 
 if __name__ == '__main__':
@@ -93,6 +100,10 @@ if __name__ == '__main__':
                         type=str,
                         help=('File containing ' +
                               'latitude-longitude coordinates for cities'))
+    parser.add_argument('--as-adj-list', dest='as_adj_list',
+                        action='store_true',
+                        default=False,
+                        help='Generate output as an adjacency list')
     parser.add_argument('--out', dest='out_file', metavar='output',
                         type=str,
                         help=('File to which ' +
