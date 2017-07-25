@@ -23,6 +23,10 @@ import io
 import math
 
 
+# Missing delay value.
+NO_RTT_VAL = float(const.NO_RTT)
+
+
 def proc_row(row):
     """Process data in the current row.
     """
@@ -96,7 +100,7 @@ def parse(page, city_data):
         if proc and const.TAB_END_PAT.match(line):
             break
 
-    return rtt_matrix, stats.compute(rtt_matrix, float(const.NO_RTT))
+    return rtt_matrix, stats.compute(rtt_matrix, NO_RTT_VAL)
 
 
 def calc_dist(x, y):

@@ -23,6 +23,10 @@ import io
 import math
 
 
+# Missing loss value.
+NO_LOSS_VAL = float(const.NO_LOSS)
+
+
 def proc_row(row):
     """Process data in the current row.
     """
@@ -96,7 +100,7 @@ def parse(page, city_data):
         if proc and const.TAB_END_PAT.match(line):
             break
 
-    return loss_matrix, stats.compute(loss_matrix, float(const.NO_LOSS))
+    return loss_matrix, stats.compute(loss_matrix, NO_LOSS_VAL)
 
 
 # Complete the symmetric matrix given the lower-left triangle.
