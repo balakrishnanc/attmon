@@ -108,6 +108,7 @@ def summarize(links, out, thresh=0.0):
     for v, k in loss_max[:5]:
         out.write(u"    %4.2f %20s => %s\n" % (v, k[0], k[1]))
 
+
 def main(args):
     """Merge loss data.
     """
