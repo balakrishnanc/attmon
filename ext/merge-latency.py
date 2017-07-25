@@ -19,6 +19,7 @@ __license__ = 'MIT'
 from collections import defaultdict as defdict
 import argparse
 import io
+import math
 import os
 import shutil
 import sys
@@ -71,6 +72,9 @@ def summarize(links, out, thresh=0.0):
     # Average latency of links.
     rtt_avg = []
 
+    # Standard deviation of link latencies.
+    rtt_std = []
+
     # Maximum latency observed on links.
     rtt_max = [] 
 
@@ -81,15 +85,25 @@ def summarize(links, out, thresh=0.0):
         avg = sum(data_lst)/len(data_lst)
         rtt_avg.append((avg, src_dst))
 
+        # Standard deviation of latencies.
+        var = sum([(v-avg)**2 for v in data_lst])/(len(data_lst)-1)
+        std = math.sqrt(var)
+        rtt_std.append((std, src_dst))
+
         # Maximum latency.
         rtt_max.append((max(data_lst), src_dst))
 
     # Sort the data on links in reverse order.
     rtt_avg.sort(key=lambda v: v[0], reverse=True)
+    rtt_std.sort(key=lambda v: v[0], reverse=True)
     rtt_max.sort(key=lambda v: v[0], reverse=True)
 
     out.write(u"*** links with highest average latency\n")
     for v, k in rtt_avg[:5]:
+        out.write(u"    %4.2f %20s => %s\n" % (v, k[0], k[1]))
+
+    out.write(u"*** links with highest standard deviation of latency\n")
+    for v, k in rtt_std[:5]:
         out.write(u"    %4.2f %20s => %s\n" % (v, k[0], k[1]))
 
     out.write(u"*** links with maximum observed latency\n")
