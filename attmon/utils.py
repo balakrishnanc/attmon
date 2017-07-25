@@ -102,3 +102,23 @@ def complete_matrix(matrix, def_val):
             elif r not in full_m[c]:
                 full_m[c][r] = matrix[r][c]
     return full_m
+
+
+def adj_list(matrix, no_val):
+    """Compute simple statistics on the gathered delay or loss values.
+    """
+    vals = [(r, c, matrix[r][c])
+            for r in matrix.keys()
+            for c in matrix[r]
+            if matrix[r][c] != no_val]
+    vals.sort(key=lambda v: v[0:2])
+    return vals
+
+
+def write_adj_list(alist, stats, out, sep=const.COMMA):
+    """Write the adjacency list to a file.
+    """
+    # Each row is a tuple containing the source, destination, and a loss or delay value.
+    out.write(const.NEWLINE.join([sep.join(str(v) for v in row) for row in alist]))
+    out.write(const.NEWLINE)
+    out.write("#> min./max./avg. : %s, %s, %s\n" % tuple([str(v) for v in stats]))
