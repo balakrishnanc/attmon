@@ -108,10 +108,9 @@ def main(args):
 
     with io.open(out_file, 'w', encoding='utf-8') as out:
         for cols in analyze(in_path, beg_ts, end_ts):
-            link_name, min_ts, max_ts, stats = cols
+            link_name, _min_ts, _max_ts, stats = cols
             stats_info = SPACE.join((str(v) for v in stats))
-            line = SPACE.join((str(v) for v in
-                               (link_name, min_ts, max_ts, stats_info)))
+            line = SPACE.join((str(v) for v in (link_name, stats_info)))
             out.write(u"%s\n" % (line))
 
 
