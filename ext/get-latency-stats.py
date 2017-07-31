@@ -69,8 +69,8 @@ def compute_stats(meas):
     """
     avg = np.mean(meas)
     sdev = np.std(meas)
-    p25, p75 = np.percentile(meas, (25, 75))
-    return tuple([round(v, 2) for v in (avg, sdev, p25, p75)])
+    p25, p75, p5, p95 = np.percentile(meas, (25, 75, 5, 95))
+    return tuple([round(v, 2) for v in (avg, sdev, p25, p75, p5, p95)])
 
 
 def analyze(in_path, *opts):
